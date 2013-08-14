@@ -26,6 +26,19 @@ var program = require('commander');
 var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
+var rest = require('restler');
+var URL_DEFAULT = "http://arcane-cliffs-5147.herokuapp.com/";
+
+var assertURLValid = function(url) {
+  rest.get(url).on('complete', function(result) {
+      if (result instanceof Error) {
+	      sys.puts('Error: ' + result.message);
+	      this.retry(5000); // try again after 5 sec
+	  } else {
+	          return result;
+	      }
+  });
+}
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
